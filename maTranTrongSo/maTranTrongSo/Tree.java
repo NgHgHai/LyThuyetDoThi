@@ -1,31 +1,30 @@
-package maTranKe;
+package maTranTrongSo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 
 public class Tree extends UnDirectedGraph {
 
-	public Tree(int[][] matrix) {
-		super(matrix);
+	public Tree(int[][] weightArr) {
+		super(weightArr);
 		// TODO Auto-generated constructor stub
 	}
 
 	// ------------------do lech tam-------------------
 	// DFS
 	public int getEccDFS(int i) { // do lech tam
-		int eccentricity = 0;
-		int max = 0;
-		int[] visted = new int[lengthOfMatrix];
+		int eccentricity = 0; // do lech tam ban dau dc gan = 0
+		int max = 0; // luu lai do lech tam lon nhat cua dinh
+		int[] visted = new int[weightArr.length];
 		eccDFS(i, visted, eccentricity, max);
 		return max;
 	}
 
 	public void eccDFS(int i, int[] visted, int eccentricity, int max) {
 		visted[i] = 1;
-		for (int j = 0; j < matrix.length; j++) {
-			if (matrix[i][j] >= 1 && visted[j] != 1) {
+		for (int j = 0; j < weightArr.length; j++) {
+			if (weightArr[i][j] < VCL && visted[j] != 1) {
 				eccentricity++;
 				if (eccentricity > max) {
 					max = eccentricity;
@@ -39,11 +38,11 @@ public class Tree extends UnDirectedGraph {
 	// BFS
 	public int getEccBFS(int i) {
 		int eccentricity = 0;
-		int[] visted = new int[lengthOfMatrix];
+		int[] visted = new int[weightArr.length];
 		Queue<Integer> queue = new LinkedList<>();
 		queue.offer(i);
-		eccBFS(queue, visted, matrix, eccentricity);
-//		System.out.println(Arrays.toString(visted));
+		eccBFS(queue, visted, weightArr, eccentricity);
+//			System.out.println(Arrays.toString(visted));
 		return eccentricity;
 	}
 
@@ -53,7 +52,7 @@ public class Tree extends UnDirectedGraph {
 
 		// tim cac phan tu con cua temp chua dc tham
 		for (int j = 0; j < matrix.length; j++) {
-			if (matrix[temp][j] >= 1 && visted[j] != 1) {
+			if (matrix[temp][j] < VCL && visted[j] != 1) {
 
 				visted[j] = 1;
 				queue.offer(j);
@@ -65,15 +64,16 @@ public class Tree extends UnDirectedGraph {
 			eccBFS(queue, visted, matrix, eccentricity);
 
 	}
+
 	// -----------------------getRoot-------------------------------
-	public ArrayList<Integer> getRoot() {
+	public ArrayList<Integer> getRoot() { // tim tam cua Tree, co the co den 2 tam
 		ArrayList<Integer> result = new ArrayList<>();
 		int min = Integer.MAX_VALUE;
-		for (int i = 0; i < matrix.length; i++) {
+		for (int i = 0; i < weightArr.length; i++) {
 			if (getEccBFS(i) < min) {
-				// neu dieu nay xay ra thi mang ket qua o vi tri 
-				// 0 se dc do day , va o vi tri 1 se = null 
-				result.set(0, i)   ;
+				// neu dieu nay xay ra thi mang ket qua o vi tri
+				// 0 se dc do day , va o vi tri 1 se = null
+				result.set(0, i);
 				min = getEccBFS(min);
 				result.set(1, null);
 			} else if (getEccBFS(i) == min) {
@@ -82,6 +82,10 @@ public class Tree extends UnDirectedGraph {
 			}
 		}
 		return result;
+	}
+	public int getRadiusOfTree() {
+		// co the co 2 tam nhung chung se co cung ban kinh
+		return getRoot().get(0);
 	}
 
 }

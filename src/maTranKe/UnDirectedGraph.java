@@ -284,10 +284,22 @@ public class UnDirectedGraph extends Graph {
 
 	// -------------------is Tree -----------------------------------
 	public boolean isTree() {
-		if (isComponent() && lengthOfMatrix - 1 == numOfEdge()) {
+		
+		if (isSingleGrap() && isComponent() && lengthOfMatrix - 1 == numOfEdge()) {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean isSingleGrap() {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				if (matrix[i][j] != 0 && matrix[i][j] != 1 && matrix[i][i]!= 0) {
+					return false ;
+				}
+			}
+		}
+		return true;
 	}
 
 	public Tree getSpanningTreeDFS(int i) {
@@ -344,11 +356,11 @@ public class UnDirectedGraph extends Graph {
 		// khong su dung class edge
 		int edge = 0;
 		int[][] MTtree = new int[lengthOfMatrix][lengthOfMatrix];
-		while (edge < lengthOfMatrix - 1) {// luu y co the la lengthOfMatrix -2
+		while (edge < lengthOfMatrix - 1) {
 			int a[] = getMin(weightMT);
 			if (!hasPathBetweenTwoVertices(a[0], a[1], MTtree)) {
 				addEdge(a[0], a[1], MTtree);
-				edge++;// khi so canh = so dinh -1 thi dung
+				edge++;// khi so canh = so dinh -1 thi dung vong lap while 
 				upMaxEdge(a[0], a[1], weightMT);
 			} else
 				upMaxEdge(a[0], a[1], weightMT);
